@@ -65,8 +65,8 @@ fprintf(['Version:              ',vers_ephys_es_rs,'\n'])
 disp(['Study name:           ',exptdata.analysisName]);
 disp(['Data location:        ',exptdata.datalocation]);
 disp(['Processed NEV dir:    ',exptdata.processedDatadir]);
-disp(['Project Directory:    ',projectDir]);
-disp(['Figure Directory:     ',figureDir]);
+disp(['Project Directory:    ',exptdata.projectdir]);
+disp(['Figure Directory:     ',exptdata.figuredir]);
 
 % =====================================================================================================================
 %% 1. Load behavioural and neurophysiological data

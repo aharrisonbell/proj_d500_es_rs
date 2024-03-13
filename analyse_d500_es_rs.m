@@ -3,32 +3,33 @@
 % Updated Dec 19, 2018 - updated to include both RSVP300 and DMS500 analysis
 % Updated March 27, 2020 - updated to only look at DMS500
 % Updated May 12, 2023 - updated to run on HOMER_B550 (PC)
+% Updated Jan 17, 2024 - updated for use by KCL students
 %% TASK DESCRIPTION:
 % This is a DMS task...
 
-[d500specs.fList,d500specs.pList] = matlab.codetools.requiredFilesAndProducts('analyse_d500_es_rs.m');
-
-clc; clear; close all;
+clc; clearvars; close all;
 dbstop if error;
 global exptdata
 
 if ispc
     rootdir='C:\Users\ahbel\OneDrive - King''s College London\MATLAB';
 else % MAC
-    rootdir='~/Documents/MATLAB/';
+    rootdir='~/OneDrive - King''s College London/MATLAB';
 end
 addpath(userpath);
-addpath(genpath([rootdir,filesep,'ephys_projects']));
-addpath(genpath([rootdir,filesep,'ephys_projects',filesep,'code_d500_es_rs']));
+addpath(genpath([rootdir,filesep,'currentProjects']));
+addpath(genpath([rootdir,filesep,'currentProjects',filesep,'proj_d500_es_rs']));
 addpath(genpath([rootdir,filesep,'Common_Functions']));
-addpath(genpath([rootdir,filesep,'MonkeyLogic'])); % may need to update
+%addpath(genpath([rootdir,filesep,'MonkeyLogic'])); % may need to update
+
+[d500specs.fList,d500specs.pList] = matlab.codetools.requiredFilesAndProducts('analyse_d500_es_rs.m');
 
 ephys_analysis_defaults;
 exptdata.lastModified=datetime('today');
 warning('off','MATLAB:MKDIR:DirectoryExists');
 warning('off', 'MATLAB:table:ModifiedAndSavedVarnames')
 
-% Modifiable defaults and directories (Change These)
+% Modifiable defaults and directories (Change These as needed)
 exptdata.analysisName='D500_ES-RS_Study'; % used for savenames, figures, etc. (pick whatever you want; will be used for filenames)
 exptdata.projectdir=[exptdata.analysisdir,exptdata.analysisName,filesep]; mkdir(exptdata.projectdir); %
 exptdata.figuredir500=[exptdata.projectdir,'figures',filesep,'d500_es_rs',filesep]; mkdir(exptdata.figuredir500);
@@ -63,7 +64,7 @@ disp('Press a key to continue...'); pause;
 do_ephys_processAllnevFiles; % run only once
 disp('Press a key to continue...'); pause; 
  
-exptdata.allMonkeyNames={'Vortex','Vulcan'};
+exptdata.allMonkeyNames={'Vulcan'}; % 'Vortex',
 for mm=1:length(exptdata.allMonkeyNames)
     exptdata.monkeyname=exptdata.allMonkeyNames{mm}; % monkey name
 
