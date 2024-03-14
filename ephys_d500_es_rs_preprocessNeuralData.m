@@ -90,7 +90,7 @@ for df=1:numel(datafiles)
     figure; set(gcf,'Units','Normalized');  set(gcf,'Position',[0.1 0.1 0.8 0.8]); set(gca,'FontName','Arial')
     subplot(1,2,1) % reaction time
     bardata=nan(6,2);
-    bardata(1,1)=nanmean(behavData.newReactionTime(behavData.TrialError==0 & ismember(behavData.BlockNumber,1) & ismember(behavData.ConditionNumber,exptdata.dms500.expectRepeat_actualRepeat),2));
+    bardata(1,1)=nanmean(behavData.newReactionTime(behavData.TrialError==0 & ismember(behavData.BlockNumber,1) & ismember(behavData.ConditionNumber,exptdata.dms500.expectRepeat_actualRepeat),2)); %#ok<*NANMEAN>
     bardata(1,2)=nanmean(behavData.newReactionTime(behavData.TrialError==0 & ismember(behavData.BlockNumber,1) & ismember(behavData.ConditionNumber,exptdata.dms500.expectRepeat_actualAltern),2));
     bardata(2,1)=nanmean(behavData.newReactionTime(behavData.TrialError==0 & ismember(behavData.BlockNumber,2) & ismember(behavData.ConditionNumber,exptdata.dms500.expectAltern_actualRepeat),2));
     bardata(2,2)=nanmean(behavData.newReactionTime(behavData.TrialError==0 & ismember(behavData.BlockNumber,2) & ismember(behavData.ConditionNumber,exptdata.dms500.expectAltern_actualAltern),2));

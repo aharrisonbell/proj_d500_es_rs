@@ -11,16 +11,16 @@ vers_ephys_es_rs='1.3; May 15, 2023';
 global exptdata
 close all;
 if ispc
-    rootdir='C:\Users\ahbel\OneDrive - King''s College London\MATLAB';
+    rootdir='C:\Users\ahbel\OneDrive - King''s College London\ephysProjects\';
+    addpath(genpath('C:\Users\ahbel\OneDrive - King''s College London\MATLAB\Common_Functions'));
+    addpath(genpath([rootdir,filesep,'commonProjectFunctions']));
 else % MAC
-    rootdir='~/Documents/MATLAB/';
+    rootdir='~/OneDrive - King''s College London/ephysProjects/';
+    addpath(genpath('~/OneDrive - King''s College London/MATLAB/Common_Functions'));
+    addpath(genpath([rootdir,filesep,'commonProjectFunctions']));
 end
-addpath(userpath);
-addpath(genpath([rootdir,filesep,'ephys_projects']));
-addpath(genpath([rootdir,filesep,'ephys_projects',filesep,'code_d500_es_rs']));
-addpath(genpath([rootdir,filesep,'Common_Functions']));
-addpath(genpath([rootdir,filesep,'MonkeyLogic'])); % may need to update
 ephys_analysis_defaults;
+
 exptdata.analysisName='D500_ES-RS_Study'; % used for savenames, figures, etc. (pick whatever you want; will be used for filenames)
 exptdata.projectdir=[exptdata.analysisdir,exptdata.analysisName,filesep]; 
 exptdata.figuredir500=[exptdata.projectdir,'figures',filesep,'d500_es_rs',filesep]; mkdir(exptdata.figuredir500);
@@ -35,9 +35,9 @@ d500specs.lowerLim=.33;
 
 %% x. INTRODUCTION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %%
 clc;
-fprintf('<strong>*======================================*</strong>\n')
-fprintf('<strong>| do_d500_es_rs_behaviouralAnalysis1.m |</strong>\n')
-fprintf('<strong>*======================================*</strong>\n')
+fprintf('<strong>****************************************</strong>\n')
+fprintf('<strong>* do_d500_es_rs_behaviouralAnalysis1.m *</strong>\n')
+fprintf('<strong>****************************************</strong>\n')
 fprintf(['Version: ',vers_ephys_es_rs,'\n'])
 disp(['Study name:             ',exptdata.analysisName]);
 disp(['ePhys Data location:    ',exptdata.datalocation]);

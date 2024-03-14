@@ -47,9 +47,9 @@ vers_ephys_es_rs='2.2; May 15, 2023';
 %behav
 clc
 global exptdata
-cprintf('yellow','*-------------------------------------------*\n')
-cprintf('yellow','| ephys_d500_es_rs_prepareMegaMatrices.m    |\n')
-cprintf('yellow','*-------------------------------------------*\n')
+fprintf('*-------------------------------------------*\n')
+fprintf('| ephys_d500_es_rs_prepareMegaMatrices.m    |\n')
+fprintf('*-------------------------------------------*\n')
 fprintf(['Version: ',vers_ephys_es_rs,'\n'])
 disp(['Data location:    ',exptdata.datalocation]);
 disp(['Processed NEV dir: ',exptdata.processedDatadir]);

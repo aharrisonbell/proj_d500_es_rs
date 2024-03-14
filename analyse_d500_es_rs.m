@@ -4,8 +4,10 @@
 % Updated March 27, 2020 - updated to only look at DMS500
 % Updated May 12, 2023 - updated to run on HOMER_B550 (PC)
 % Updated Jan 17, 2024 - updated for use by KCL students
-
+% Updated Mar 14, 2024 - updated more
+%% Notes
 % Uses: James Tursa (2024). MTIMESX - Fast Matrix Multiply with Multi-Dimensional Support (https://www.mathworks.com/matlabcentral/fileexchange/25977-mtimesx-fast-matrix-multiply-with-multi-dimensional-support), MATLAB Central File Exchange. Retrieved March 13, 2024.
+% (13/03/2024 - no longer uses MTIMESX - replaced by MATLAB pagemtimes.m)
 
 %% TASK DESCRIPTION:
 % This is a DMS task...
@@ -13,20 +15,24 @@
 clc; clearvars; close all;
 dbstop if error;
 global exptdata
-
+disp('****** analyse_d500_es_vs.m ******')
+disp('**** last updated: 14/03/2024 ****')
 if ispc
-    rootdir='C:\Users\ahbel\OneDrive - King''s College London\MATLAB';
+    rootdir='C:\Users\ahbel\OneDrive - King''s College London\ephysProjects\';
+    addpath(genpath('C:\Users\ahbel\OneDrive - King''s College London\MATLAB\Common_Functions'));
+    addpath(genpath([rootdir,filesep,'commonProjectFunctions']));
+    addpath(genpath([rootdir,filesep,'D500_ES-RS_Study',filesep,'proj_d500_es_rs']));
 else % MAC
-    rootdir='~/OneDrive - King''s College London/MATLAB';
+    rootdir='~/OneDrive - King''s College London/ephysProjects/';
+    addpath(genpath('~/OneDrive - King''s College London/MATLAB/Common_Functions'));
+    addpath(genpath([rootdir,filesep,'commonProjectFunctions']));
+    addpath(genpath([rootdir,filesep,'D500_ES-RS_Study',filesep,'proj_d500_es_rs']));
 end
-%addpath(userpath);
-addpath(genpath([rootdir,filesep,'currentProjects',filesep,'proj_d500_es_rs']));
-addpath(genpath([rootdir,filesep,'currentProjects',filesep,'commonProjectFunctions']));
-addpath(genpath([rootdir,filesep,'Common_Functions']));
-%addpath(genpath([rootdir,filesep,'MonkeyLogic'])); % may need to update
 
 [d500specs.fList,d500specs.pList] = matlab.codetools.requiredFilesAndProducts('analyse_d500_es_rs.m');
 
+%% Loading defaults
+disp('Loading defaults...')
 ephys_analysis_defaults;
 exptdata.lastModified=datetime('today');
 warning('off','MATLAB:MKDIR:DirectoryExists');
@@ -53,6 +59,7 @@ exptdata.behav_reprocess=0; % set to one if you want to regenerate output files 
 
 % Save EXPTDATA structure
 save([exptdata.analysisdir,filesep,exptdata.analysisName,'_exptdata.mat'],'exptdata');
+disp('Done.')
 
 %% STAGE 1: Compile and analyse behavioural data from both monkeys 
 % (RUN THIS BEFORE NEURAL PREPROCESSING; does not require access to external drive)
@@ -60,9 +67,7 @@ save([exptdata.analysisdir,filesep,exptdata.analysisName,'_exptdata.mat'],'exptd
 exptdata.paradigm={'DMS500'};
 do_ephys_compileBehavData; % should only have to run once
 disp('Press a key to continue...'); pause;
-do_d500_es_rs_behaviouralAnalysis1; % behavioural analysis that uses output of do_ephys_compileBehavData and includes regression analysis
-disp('Press a key to continue...'); pause;
-
+ 
 %% STAGE 2: (Pre)Process neural data for each monkey
 do_ephys_processAllnevFiles; % run only once
 disp('Press a key to continue...'); pause; 
