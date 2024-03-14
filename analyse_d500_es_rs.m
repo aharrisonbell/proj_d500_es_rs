@@ -4,6 +4,9 @@
 % Updated March 27, 2020 - updated to only look at DMS500
 % Updated May 12, 2023 - updated to run on HOMER_B550 (PC)
 % Updated Jan 17, 2024 - updated for use by KCL students
+
+% Uses: James Tursa (2024). MTIMESX - Fast Matrix Multiply with Multi-Dimensional Support (https://www.mathworks.com/matlabcentral/fileexchange/25977-mtimesx-fast-matrix-multiply-with-multi-dimensional-support), MATLAB Central File Exchange. Retrieved March 13, 2024.
+
 %% TASK DESCRIPTION:
 % This is a DMS task...
 
@@ -16,9 +19,9 @@ if ispc
 else % MAC
     rootdir='~/OneDrive - King''s College London/MATLAB';
 end
-addpath(userpath);
-addpath(genpath([rootdir,filesep,'currentProjects']));
+%addpath(userpath);
 addpath(genpath([rootdir,filesep,'currentProjects',filesep,'proj_d500_es_rs']));
+addpath(genpath([rootdir,filesep,'currentProjects',filesep,'commonProjectFunctions']));
 addpath(genpath([rootdir,filesep,'Common_Functions']));
 %addpath(genpath([rootdir,filesep,'MonkeyLogic'])); % may need to update
 
@@ -64,7 +67,7 @@ disp('Press a key to continue...'); pause;
 do_ephys_processAllnevFiles; % run only once
 disp('Press a key to continue...'); pause; 
  
-exptdata.allMonkeyNames={'Vulcan'}; % 'Vortex',
+exptdata.allMonkeyNames={'Vulcan', 'Vortex'}; % 'Vortex',
 for mm=1:length(exptdata.allMonkeyNames)
     exptdata.monkeyname=exptdata.allMonkeyNames{mm}; % monkey name
 

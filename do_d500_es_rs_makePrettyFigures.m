@@ -56,6 +56,7 @@ exptdata.monkeyname='both';
 
 % =====================================================================================================================
 exptdata.projectdir=[exptdata.analysisdir,filesep,exptdata.analysisName,filesep];
+exptdata.figuredir=[exptdata.projectdir,'figures',filesep,'d500_es_rs',filesep]; mkdir(exptdata.figuredir);
 
 clc
 fprintf('<strong>*===================================*</strong>\n')

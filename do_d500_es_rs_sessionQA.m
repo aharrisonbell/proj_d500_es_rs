@@ -14,9 +14,9 @@ else % MAC
     rootdir='~/Documents/MATLAB/';
 end
 addpath(userpath);
-addpath(genpath([rootdir,filesep,'ephys_projects']));
+addpath(genpath([rootdir,filesep,'currentProjects',filesep,'proj_d500_es_rs']));
+addpath(genpath([rootdir,filesep,'currentProjects',filesep,'commonProjectFunctions']));
 addpath(genpath([rootdir,filesep,'Common_Functions']));
-addpath(genpath([rootdir,filesep,'MonkeyLogic'])); % may need to update
 ephys_analysis_defaults;
 exptdata.lastModified=datetime('today');
 warning('off','MATLAB:MKDIR:DirectoryExists');
@@ -27,7 +27,7 @@ warning('off','MATLAB:MKDIR:DirectoryExists');
 %exptdata.monkeyname='Vulcan';
 exptdata.monkeyname='both';
 
-exptdata.reprocessQA=0;
+exptdata.reprocessQA=1;
 
 %% Figure Selector
 % Panel 1 - imagesc figures
@@ -101,7 +101,7 @@ else
     V4_megaMatrix500NoScrubs=[temp1.V4_megaMatrix500NoScrubs; temp2.V4_megaMatrix500NoScrubs];
     TE_megaMatrix500NoScrubs=[temp1.TE_megaMatrix500NoScrubs; temp2.TE_megaMatrix500NoScrubs];
     clear temp*
-    sessions = unique(evdata.session);
+    sessions = unique(evdata.session); %#ok<*NASGU>
 end
 fprintf('done.\n')
 
@@ -132,14 +132,12 @@ for brainArea=1:2
     if brainArea==1
         AllspikeData=V4_megaMatrix500NoScrubs;
         AllspikeData_spikes=V4_megaMatrix500NoScrubs_spikes;
-        labelBrain='V4';
-        
+        labelBrain='V4';       
     else
         AllspikeData=TE_megaMatrix500NoScrubs;
         AllspikeData_spikes=TE_megaMatrix500NoScrubs_spikes;
         labelBrain='TE';
     end
-    
     
     %% Classify Neurons
     % This will perform a paired two-tailed t-test on mean(baseline) (-200-0 ms prior to
@@ -153,30 +151,30 @@ for brainArea=1:2
         clear indxN predictrz numNeuronsSession tt
         numNeuronsSession=max(AllspikeData(AllspikeData(:,2)==sessions(sess),10)); % how many neurons in this unit (this code is a bit of a hack but does the trick)
         tempVisualBad=0; tempVisualGood=0; tempVisualBoring=0;
-        for nn=1:numNeuronsSession
-            indxN=find(AllspikeData(:,2) == sessions(sess) & AllspikeData(:,3) == nn);  % row pointer for all trials for this neuron (nn) in this session (sess)
-            baselineWindow=772+50:772+250;
-            sensoryWindow =772+250+50:772+250+250; % (-250ms is start of window, so -250+300:-250+500 = +50 to +250ms)
-            tempH=ttest(mean(AllspikeData(indxN,baselineWindow),2) , mean(AllspikeData(indxN,sensoryWindow),2));
-            if tempH==1
-                if mean(mean(AllspikeData(indxN,baselineWindow),2)) > mean(mean(AllspikeData(indxN,sensoryWindow),2))
-                    AllspikeData(indxN,20)=-1; % visual suppressed
-                    tempVisualBad=tempVisualBad+1;
+        if numNeuronsSession > 0
+            for nn=1:numNeuronsSession
+                indxN=find(AllspikeData(:,2) == sessions(sess) & AllspikeData(:,3) == nn);  % row pointer for all trials for this neuron (nn) in this session (sess)
+                baselineWindow=772+50:772+250;
+                sensoryWindow =772+250+50:772+250+250; % (-250ms is start of window, so -250+300:-250+500 = +50 to +250ms)
+                tempH=ttest(mean(AllspikeData(indxN,baselineWindow),2) , mean(AllspikeData(indxN,sensoryWindow),2));
+                if tempH==1
+                    if mean(mean(AllspikeData(indxN,baselineWindow),2)) > mean(mean(AllspikeData(indxN,sensoryWindow),2))
+                        AllspikeData(indxN,20)=-1; % visual suppressed
+                        tempVisualBad=tempVisualBad+1;
+                    else
+                        AllspikeData(indxN,20)=1; % visual excitatory
+                        tempVisualGood=tempVisualGood+1;
+                    end
                 else
-                    AllspikeData(indxN,20)=1; % visual excitatory
-                    tempVisualGood=tempVisualGood+1;
+                    AllspikeData(indxN,20)=0;
+                    tempVisualBoring=tempVisualBoring+1;
                 end
-            else
-                AllspikeData(indxN,20)=0;
-                tempVisualBoring=tempVisualBoring+1;
             end
         end
         disp(['...Session: ',num2str(sess),' -- (E:',num2str(tempVisualGood),' / S:',num2str(tempVisualBad),' / nR:',num2str(tempVisualBoring),' / Total:',num2str(numNeuronsSession),')'])
     end
     clear temp*
-    
-    
-    
+   
     %FILE,ARRAY,SHEET,RANGE
     
     %% New version - One figure, One neuron
@@ -192,6 +190,7 @@ for brainArea=1:2
                 end
                 
                 h=figure; set(gcf,'Units','Normalized');  set(gcf,'Position',[0.1 0.1 0.8 0.8]); set(gca,'FontName','Arial') % new figure
+                
                 %% Panel 1 - Average Spike Density Function
                 subplot(5,1,1); hold on
                 tempPointer=AllspikeData(:,1)==monk & AllspikeData(:,2)==sessionsMonk(sess) & AllspikeData(:,3)==neuronsSession((nn));
@@ -214,8 +213,7 @@ for brainArea=1:2
                 c.Label.String = 'Firing Rate (sp/s)';
                 c.Limits=[0 ceil(max(max(AllspikeData(tempPointer,[772:1522 1523:2273 2274:3024]))))];
                 xlim([0 2250])
-                
-                
+                                
                 %% Panel 2
                 subplot(5,1,2); hold on
                 clear tempNeuronData tempDataPassive tempDataActive tempScale avgSpden h1 h2
@@ -265,8 +263,7 @@ for brainArea=1:2
                     tempNeuronLabel='(Non-Responsive)';
                 end
                 title('Sum of Spike Density (ordered according to Trial Number','FontSize',14)
-                
-                
+                                
                 %% Panel 4
                 subplot(5,1,4); hold on
                 hist(sum(tempNeuronData,2),1:100:50000)
@@ -579,24 +576,3 @@ if ~isempty(find(ismember(includeFigs,5)==1, 1))
     end % monkey
     toc
 end
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
