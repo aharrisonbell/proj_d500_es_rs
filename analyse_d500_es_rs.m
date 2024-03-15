@@ -1,4 +1,4 @@
-%% analyse_d500_es_rs.m
+ %% analyse_d500_es_rs.m
 % ES_RS DMS500 Experiment File (DM500 Experiment)
 % Updated Dec 19, 2018 - updated to include both RSVP300 and DMS500 analysis
 % Updated March 27, 2020 - updated to only look at DMS500
@@ -51,10 +51,10 @@ exptdata.spike_samplingFreq=1000;
 exptdata.LFP_samplingFreq=1000;
 exptdata.gaussian_kernel=10; % gaussian sd = 10ms
 
-% Analysis Parameters
+% Analysis Parameters 
 exptdata.xrange_psths=-250:500; % window surrounding stimulus onset (in ms)
 exptdata.reprocess=0; % recreate trialised files even if they already exist (preprocess) (includes prepping megaMatrices)
-exptdata.reviewNeurons=0; % determines whether to generate figure for each neuron
+exptdata.reviewNeurons=1; % determines whether to generate figure for each neuron
 exptdata.behav_reprocess=0; % set to one if you want to regenerate output files for existing files
 
 % Save EXPTDATA structure

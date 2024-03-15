@@ -316,7 +316,7 @@ for df=1:numel(datafiles)
         TEp_bigMatrix(trialGap(un):trialGap(un)+numtrials-1,windowGap(6):windowGap(6)+length(exptdata.xrange_psths)-1)=squeeze(TEp_trialSpden_ResponseBAD(:,un,:));
         TEp_bigMatrix(trialGap(un):trialGap(un)+numtrials-1,windowGap(7):windowGap(7)+length(exptdata.xrange_psths)-1)=squeeze(TEp_trialSpden_reward(:,un,:));
     end
-    save([exptdata.projectdir,tempname(1:end-13),'sessionData.mat'],'V4_bigMatrix','TEp_bigMatrix','-v7.3');
+    save([exptdata.projectdir,'sessionData',filesep, tempname(1:end-13),'sessionData.mat'],'V4_bigMatrix','TEp_bigMatrix','-v7.3');
     
     
     
@@ -354,7 +354,7 @@ for df=1:numel(datafiles)
         TEp_bigMatrix_spikes(trialGap(un):trialGap(un)+numtrials-1,windowGap(6):windowGap(6)+length(exptdata.xrange_psths)-1)=squeeze(TEp_trialSpike_ResponseBAD(:,un,:));
         TEp_bigMatrix_spikes(trialGap(un):trialGap(un)+numtrials-1,windowGap(7):windowGap(7)+length(exptdata.xrange_psths)-1)=squeeze(TEp_trialSpike_reward(:,un,:));
     end
-    save([exptdata.projectdir,tempname(1:end-13),'sessionData_spikes.mat'],'V4_bigMatrix_spikes','TEp_bigMatrix_spikes','-v7.3');
+    save([exptdata.projectdir,'sessionData',filesep, tempname(1:end-13),'sessionData_spikes.mat'],'V4_bigMatrix_spikes','TEp_bigMatrix_spikes','-v7.3');
     
     
     

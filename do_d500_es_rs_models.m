@@ -1,9 +1,12 @@
 % do_d500_es_rs_models(vargin)
 % AHB, started July 24, 2020, based on do_d500_es_rs_multipleRegression
+% Updated March 14, 2024 - updated for use by KCL students
+
 % This version is essentially a cleaned-up version of the above, with an
 % effort to:
 % a) prepare all figures for the paper
 % b) follow all of Yinan's advice, including vectorisation
+
 % BEHAV DATA STRUCTURE:
 %  1) monkey number
 %  2) session number
@@ -21,17 +24,28 @@
 % 3. maybe consider annotating the figures (though not as important)
 % 4. create spike density functions
 
-
 clc; close all; clearvars
-vers_ephys_es_rs='1.1; Sept 12, 2020';
+vers_ephys_es_rs='1.3; Mar 14, 2024';
 % 1.0 - original version (July 20, 2018), added vectorisation
 % 1.1 - updated figures, added functionality to compare residualisation methods
 % 1.2 - updated to run on modern hardware and PC (HOMER_B550)
-
+% 1.3 - updated to run on modern hardware and suitable for KCL analysis% (Mar 14, 2024)
 tic
 ephys_analysis_defaults;
-exptdata.lastModified=date;
+exptdata.lastModified=date; %#ok<DATE>
 warning('off','MATLAB:MKDIR:DirectoryExists');
+
+if ispc
+    rootdir='C:\Users\ahbel\OneDrive - King''s College London\ephysProjects\';
+    addpath(genpath('C:\Users\ahbel\OneDrive - King''s College London\MATLAB\Common_Functions'));
+    addpath(genpath([rootdir,filesep,'commonProjectFunctions']));
+    addpath(genpath([rootdir,filesep,'D500_ES-RS_Study',filesep,'proj_d500_es_rs']));
+else % MAC
+    rootdir='~/OneDrive - King''s College London/ephysProjects/';
+    addpath(genpath('~/OneDrive - King''s College London/MATLAB/Common_Functions'));
+    addpath(genpath([rootdir,filesep,'commonProjectFunctions']));
+    addpath(genpath([rootdir,filesep,'D500_ES-RS_Study',filesep,'proj_d500_es_rs']));
+end
 
 % Modifiable defaults and directories (Change These)
 exptdata.analysisName='D500_ES-RS_Study'; % used for savenames, figures, etc. (pick whatever you want; will be used for filenames)
@@ -40,21 +54,22 @@ figureDir=[projectDir,'figures',filesep]; mkdir(figureDir);
 mkdir([figureDir,'matlabFigFiles']); mkdir([figureDir,'neuronPrintouts']);
 diary([projectDir,lower(exptdata.analysisName),'_',exptdata.analysisName,'.txt']);
 
+
 % Analysis Parameters
 exptdata.xrange_psths=-250:500;     % window surrounding stimulus onset (in ms)
 exptdata.reprocess=0;               % recreate trialised files even if they already exist (preprocess) (includes prepping megaMatrices)
 regenerateDists=1;         % generate model distributions (0 if already exist and just want to produce figures)
 regenerateNullDists=1;     % generate null distributions (0 if already exist and just want to produce figures) (shouldn't have to be done again unless model changes)
-addpath(userpath);
+
 
 %addpath(genpath('~/Documents/MATLAB/spm12'));
 %addpath(genpath('C:\Users\Andrew H Bell\iCloudDrive\Documents\MATLAB\spm12'));
 
 % =====================================================================================================================
 clc
-fprintf('<strong>*========================*</strong>\n')
+fprintf('<strong>**************************</strong>\n')
 fprintf('<strong>| do_d500_es_rs_models.m |</strong>\n')
-fprintf('<strong>*========================*</strong>\n')
+fprintf('<strong>**************************</strong>\n')
 fprintf(['Version:              ',vers_ephys_es_rs,'\n'])
 disp(['Study name:           ',exptdata.analysisName]);
 disp(['Data location:        ',exptdata.datalocation]);
@@ -441,7 +456,7 @@ for ba=1:2 % run on each brain area
                 all_trialNumbers, ...
                 all_sessions);
             model=  modelData(m).brainArea(ba).modelOutput;
-            save([projectDir,'d500_',modelData(m).modelName,modelData(m).ev_suffix,'_',currentLabel,'.mat'],'model','ndist_thresholds')
+            save([projectDir,'modelDatasets/d500_',modelData(m).modelName,modelData(m).ev_suffix,'_',currentLabel,'.mat'],'model','ndist_thresholds')
             clear model
         else
             fprintf(['\n<strong>..Loading printouts for </strong>',num2str(m),'...\n'])
@@ -473,7 +488,7 @@ for ba=1:2 % run on each brain area
 %                 all_sessions, ...
 %                 2);
 %             model=  modelData(m).brainArea(ba).modelOutput;
-%             save([projectDir,'d500_',modelData(m).modelName,'_',currentLabel,'_randomSplit.mat'],'model','ndist_thresholds');
+%             save([projectDir,'modelDatasets/d500_',modelData(m).modelName,'_',currentLabel,'_randomSplit.mat'],'model','ndist_thresholds');
 %             clear model
 %         else
 %             cprintf('_magenta',['\n\nLoading printouts for model ',num2str(m),'...\n'])
@@ -483,7 +498,7 @@ for ba=1:2 % run on each brain area
     end
     clear currentData currentLabel
 end
-save([projectDir,'d500_modelData.mat'],'modelData')
+save([projectDir,'modelDatasets/d500_modelData.mat'],'modelData')
 clear modelData
 
 % modelData is very very large (10x largest spikedata matrix). Should fix
