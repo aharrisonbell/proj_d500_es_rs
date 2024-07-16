@@ -1,4 +1,4 @@
-%% do_es_rs_behaviouralAnalysis1
+%% do_d500_es_rs_behaviouralAnalysis1
 % by CS, AHB, started Nov 6, 2018
 vers_ephys_es_rs='1.3; May 15, 2023';
 % 1.0 - original version (Nov 6, 2018)
@@ -389,7 +389,7 @@ for s = 1:length(sessmat) % run GLM on each session
     %** glm on CORRECT OR INCORRECT
     tempregressors = [evdata.actual(temp_indx) evdata.expect(temp_indx).*evdata.active(temp_indx) evdata.prep(temp_indx) evdata.prep(temp_indx).*evdata.active(temp_indx) evdata.congruent_n1(temp_indx) evdata.congruent_n2(temp_indx) evdata.congruent_n3(temp_indx)];
     xtick1labels={'intercept','actual','expect*active','p_rep','p_rep*active','congruent-n1','congruent-n2','congruent-n3'};
-    Betas_cor(s,:) = glmfit(tempregressors,evdata.cor(temp_indx));  
+    Betas_cor(s,:) = glmfit(tempregressors,evdata.cor(temp_indx),'binomial','probit');  
     clear tempregressors
     
     %** glm on CHOSE REPEAT

@@ -73,10 +73,10 @@ exptdata.reprocessQA=1;
 exptdata.analysisName='D500_ES-RS_Study'; % used for savenames, figures, etc. (pick whatever you want; will be used for filenames)
 exptdata.projectdir=[exptdata.analysisdir,exptdata.analysisName,filesep];
 
-cprintf('*blue','*---------------------------*\n')
-cprintf('*blue','| do_d500_es_rs_sessionQA.m |\n')
-cprintf('*blue','*---------------------------*\n')
-cprintf('*red',['Version: ',vers_ephys_es_rs,'\n'])
+fprintf('*****************************\n')
+fprintf('* do_d500_es_rs_sessionQA.m *\n')
+fprintf('*****************************\n')
+fprintf(['Version: ',vers_ephys_es_rs,'\n'])
 disp(['Data location:    ',exptdata.datalocation]);
 disp(['Processed NEV dir: ',exptdata.processedDatadir]);
 disp(['Project Directory: ',exptdata.projectdir]);
