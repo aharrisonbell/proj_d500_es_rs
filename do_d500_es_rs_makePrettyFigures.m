@@ -56,18 +56,15 @@ exptdata.monkeyname='both';
 
 % =====================================================================================================================
 exptdata.projectdir=[exptdata.analysisdir,filesep,exptdata.analysisName,filesep];
-exptdata.figuredir=[exptdata.projectdir,'figures',filesep,'d500_es_rs',filesep]; mkdir(exptdata.figuredir);
 
-clc
-fprintf('<strong>*===================================*</strong>\n')
-fprintf('<strong>| do_d500_es_rs_makePrettyFigures.m |</strong>\n')
-fprintf('<strong>*===================================*</strong>\n')
-fprintf(['Version:              ',vers_ephys_es_rs,'\n'])
-disp(['Study name:           ',exptdata.analysisName]);
-disp(['Data location:        ',exptdata.datalocation]);
-disp(['Processed NEV dir:    ',exptdata.processedDatadir]);
-disp(['Project Directory:    ',exptdata.projectdir]);
-disp(['Figure Directory:     ',exptdata.figuredir]);
+fprintf('*==============================*\n')
+fprintf('| do_es_rs_makePrettyFigures.m |\n')
+fprintf('*==============================*\n')
+fprintf(['Version: ',vers_ephys_es_rs,'\n'])
+disp(['Data location:    ',exptdata.datalocation]);
+disp(['Processed NEV dir: ',exptdata.processedDatadir]);
+disp(['Study name:       ',exptdata.analysisName]);
+disp(['Project Directory: ',exptdata.projectdir]);
 
 % =====================================================================================================================
 %% 1. Load behavioural and neurophysiological data

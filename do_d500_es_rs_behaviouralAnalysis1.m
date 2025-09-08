@@ -1,4 +1,4 @@
-%% do_d500_es_rs_behaviouralAnalysis1
+%% do_es_rs_behaviouralAnalysis1
 % by CS, AHB, started Nov 6, 2018
 vers_ephys_es_rs='1.3; May 15, 2023';
 % 1.0 - original version (Nov 6, 2018)
@@ -11,16 +11,16 @@ vers_ephys_es_rs='1.3; May 15, 2023';
 global exptdata
 close all;
 if ispc
-    rootdir='C:\Users\ahbel\OneDrive - King''s College London\ephysProjects\';
-    addpath(genpath('C:\Users\ahbel\OneDrive - King''s College London\MATLAB\Common_Functions'));
-    addpath(genpath([rootdir,filesep,'commonProjectFunctions']));
+    rootdir='C:\Users\ahbel\OneDrive - King''s College London\MATLAB';
 else % MAC
-    rootdir='~/OneDrive - King''s College London/ephysProjects/';
-    addpath(genpath('~/OneDrive - King''s College London/MATLAB/Common_Functions'));
-    addpath(genpath([rootdir,filesep,'commonProjectFunctions']));
+    rootdir='~/Documents/MATLAB/';
 end
+addpath(userpath);
+addpath(genpath([rootdir,filesep,'ephys_projects']));
+addpath(genpath([rootdir,filesep,'ephys_projects',filesep,'code_d500_es_rs']));
+addpath(genpath([rootdir,filesep,'Common_Functions']));
+addpath(genpath([rootdir,filesep,'MonkeyLogic'])); % may need to update
 ephys_analysis_defaults;
-
 exptdata.analysisName='D500_ES-RS_Study'; % used for savenames, figures, etc. (pick whatever you want; will be used for filenames)
 exptdata.projectdir=[exptdata.analysisdir,exptdata.analysisName,filesep]; 
 exptdata.figuredir500=[exptdata.projectdir,'figures',filesep,'d500_es_rs',filesep]; mkdir(exptdata.figuredir500);
@@ -35,9 +35,9 @@ d500specs.lowerLim=.33;
 
 %% x. INTRODUCTION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %%
 clc;
-fprintf('<strong>****************************************</strong>\n')
-fprintf('<strong>* do_d500_es_rs_behaviouralAnalysis1.m *</strong>\n')
-fprintf('<strong>****************************************</strong>\n')
+fprintf('<strong>*======================================*</strong>\n')
+fprintf('<strong>| do_d500_es_rs_behaviouralAnalysis1.m |</strong>\n')
+fprintf('<strong>*======================================*</strong>\n')
 fprintf(['Version: ',vers_ephys_es_rs,'\n'])
 disp(['Study name:             ',exptdata.analysisName]);
 disp(['ePhys Data location:    ',exptdata.datalocation]);
@@ -389,7 +389,7 @@ for s = 1:length(sessmat) % run GLM on each session
     %** glm on CORRECT OR INCORRECT
     tempregressors = [evdata.actual(temp_indx) evdata.expect(temp_indx).*evdata.active(temp_indx) evdata.prep(temp_indx) evdata.prep(temp_indx).*evdata.active(temp_indx) evdata.congruent_n1(temp_indx) evdata.congruent_n2(temp_indx) evdata.congruent_n3(temp_indx)];
     xtick1labels={'intercept','actual','expect*active','p_rep','p_rep*active','congruent-n1','congruent-n2','congruent-n3'};
-    Betas_cor(s,:) = glmfit(tempregressors,evdata.cor(temp_indx),'binomial','probit');  
+    Betas_cor(s,:) = glmfit(tempregressors,evdata.cor(temp_indx));  
     clear tempregressors
     
     %** glm on CHOSE REPEAT
