@@ -17,13 +17,6 @@ else % MAC
 end
 addpath(userpath);
 addpath(genpath([rootdir,filesep,'ephys_projects']));
-addpath(genpath([rootdir,filesep,'ephys_projects',filesep,'code_d500_es_rs']));
-addpath(genpath([rootdir,filesep,'Common_Functions']));
-addpath(genpath([rootdir,filesep,'MonkeyLogic'])); % may need to update
-ephys_analysis_defaults;
-exptdata.analysisName='D500_ES-RS_Study'; % used for savenames, figures, etc. (pick whatever you want; will be used for filenames)
-exptdata.projectdir=[exptdata.analysisdir,exptdata.analysisName,filesep]; 
-exptdata.figuredir500=[exptdata.projectdir,'figures',filesep,'d500_es_rs',filesep]; mkdir(exptdata.figuredir500);
 
 %% Set Analysis Parameters
 d500specs.rt_cutoff=500; % eliminate RTs longer than 500 ms
@@ -31,10 +24,9 @@ d500specs.upperLim=.66;
 d500specs.lowerLim=.33;
 
 %% SCRATCH PAD (March 30, 2020)
-% - 
+%
 
 %% x. INTRODUCTION ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~ %%
-clc;
 fprintf('<strong>*======================================*</strong>\n')
 fprintf('<strong>| do_d500_es_rs_behaviouralAnalysis1.m |</strong>\n')
 fprintf('<strong>*======================================*</strong>\n')

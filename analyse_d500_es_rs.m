@@ -5,6 +5,11 @@
 % Updated May 12, 2023 - updated to run on HOMER_B550 (PC)
 % Updated Jan 17, 2024 - updated for use by KCL students
 % Updated Mar 14, 2024 - updated more
+% Updated Apr 14, 2026 - updated even more (during Dadbatical)
+clc; clear; close all;
+program_version='1.1.2026-04-17';
+
+
 %% Notes
 % Uses: James Tursa (2024). MTIMESX - Fast Matrix Multiply with Multi-Dimensional Support (https://www.mathworks.com/matlabcentral/fileexchange/25977-mtimesx-fast-matrix-multiply-with-multi-dimensional-support), MATLAB Central File Exchange. Retrieved March 13, 2024.
 % (13/03/2024 - no longer uses MTIMESX - replaced by MATLAB pagemtimes.m)
@@ -12,40 +17,29 @@
 %% TASK DESCRIPTION:
 % This is a DMS task...
 
-clc; clearvars; close all;
+%% SETUP DEFAULTS
 dbstop if error;
-global exptdata
-disp('****** analyse_d500_es_vs.m ******')
-disp('**** last updated: 14/03/2024 ****')
-if ispc
-    rootdir='C:\Users\ahbel\OneDrive - King''s College London\ephysProjects\';
-    addpath(genpath('C:\Users\ahbel\OneDrive - King''s College London\MATLAB\Common_Functions'));
-    addpath(genpath([rootdir,filesep,'commonProjectFunctions']));
-    addpath(genpath([rootdir,filesep,'D500_ES-RS_Study',filesep,'proj_d500_es_rs']));
-else % MAC
-    rootdir='~/OneDrive - King''s College London/ephysProjects/';
-    addpath(genpath('~/OneDrive - King''s College London/MATLAB/Common_Functions'));
-    addpath(genpath([rootdir,filesep,'commonProjectFunctions']));
-    addpath(genpath([rootdir,filesep,'D500_ES-RS_Study',filesep,'proj_d500_es_rs']));
-end
-
-[d500specs.fList,d500specs.pList] = matlab.codetools.requiredFilesAndProducts('analyse_d500_es_rs.m');
-
-%% Loading defaults
-disp('Loading defaults...')
-ephys_analysis_defaults;
-exptdata.lastModified=datetime('today');
 warning('off','MATLAB:MKDIR:DirectoryExists');
 warning('off', 'MATLAB:table:ModifiedAndSavedVarnames')
 
-% Modifiable defaults and directories (Change These as needed)
-exptdata.analysisName='D500_ES-RS_Study'; % used for savenames, figures, etc. (pick whatever you want; will be used for filenames)
-exptdata.projectdir=[exptdata.analysisdir,exptdata.analysisName,filesep]; mkdir(exptdata.projectdir); %
-exptdata.figuredir500=[exptdata.projectdir,'figures',filesep,'d500_es_rs',filesep]; mkdir(exptdata.figuredir500);
-mkdir([exptdata.figuredir500,'matlabFigFiles']); mkdir([exptdata.figuredir500,'neuronPrintouts']);
-diary([exptdata.projectdir,lower(exptdata.analysisName),'_',exptdata.analysisName,'.txt']);
+if ispc
+    %rootdir='C:\Users\ahbel\OneDrive - King''s College London\ephysProjects';
+else % MAC
+    rootdir='~/Library/CloudStorage/SynologyDrive-ephysProjects/';
+    coderoot='~/MATLAB Drive/Projects';
+end
 
-% Preprocessing Parameters
+addpath(genpath([coderoot,filesep,'commonProjectFunctions']));
+addpath(genpath([coderoot,filesep,'proj_d500_es_rs_sua']));
+
+ephys_analysis_defaults; % generates and loads config file
+exptdata.lastModified=datetime('today');
+exptdata.analysisName = 'd500_esrs'; % used for savenames, figures, etc. (pick whatever you want; will be used for filenames)
+
+[d500specs.fList,d500specs.pList] = matlab.codetools.requiredFilesAndProducts('analyse_d500_es_rs.m');
+
+
+% Preprocessing Parameters (most established by ephys_analysis_defaults.m)
 exptdata.behav_samplingFreq=1000;
 exptdata.spike_samplingFreq=1000;
 exptdata.LFP_samplingFreq=1000;
@@ -57,13 +51,34 @@ exptdata.reprocess=0; % recreate trialised files even if they already exist (pre
 exptdata.reviewNeurons=0; % determines whether to generate figure for each neuron
 exptdata.behav_reprocess=0; % set to one if you want to regenerate output files for existing files
 
+
+qualityCutoff=2; % select only neurons that have at least this grade
+
+% Analysis Parameters (many established by generate_td500_config.m)
+exptdata.xrange_psths=-250:500; % window surrounding stimulus onset (in ms)
+%exptdata.reprocess=1; % recreate trialised files even if they already exist (preprocess) (includes prepping megaMatrices)
+%exptdata.reviewNeurons=1; % determines whether to generate figure for each neuron
+%exptdata.behav_reprocess=1; % set to one if you want to regenerate output files for existing files
+exptdata.figuredir=[exptdata.projectdir,'figures',filesep,'d500_es_rs',filesep]; mkdir(exptdata.figuredir);
+mkdir([exptdata.figuredir,'matlabFigFiles']); mkdir([exptdata.figuredir,'neuronPrintouts']);
+
+
 % Save EXPTDATA structure
-save([exptdata.analysisdir,filesep,exptdata.analysisName,'_exptdata.mat'],'exptdata');
-disp('Done.')
+save([exptdata.projectdir,filesep,exptdata.analysisName,'_exptdata.mat'],'exptdata');
+diary([exptdata.projectdir,lower(exptdata.analysisName),'_',exptdata.analysisName,'.txt']);
+
+%% --------------------------------------------------------------------------------------------------------------------
+% STAGE 1: Compile data from both monkeys 
+disp('+------------------------------------------------------------------------------------------------------+')
+disp('| d500_esrs_paper.m - Main analysis program for EXPECTATION SUPPRESSION/REPETITION SUPPRESSION datasets|')
+disp('+------------------------------------------------------------------------------------------------------+')
+disp(['Program Version: ',program_version])
+disp(['Project Directory: ', exptdata.projectdir])
+disp(['Dataset Directory: ', exptdata.datalocation])
+disp(['Figure Directory:  ', exptdata.figuredir])
 
 %% STAGE 1: Compile and analyse behavioural data from both monkeys 
 % (RUN THIS BEFORE NEURAL PREPROCESSING; does not require access to external drive)
-
 exptdata.paradigm={'DMS500'};
 do_ephys_compileBehavData; % should only have to run once
 disp('Press a key to continue...'); pause;
